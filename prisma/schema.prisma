@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Object{
+  sku String @id
+  name String
+  quantity Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  flag Boolean
+  states States @relation(fields: [states_id], references: [id])
+  states_id Int
+  category Categories @relation(fields: [categories_id], references: [id])
+  categories_id Int
+  general_location GeneralLocations @relation(fields: [general_location_id], references: [id])
+  general_location_id Int
+  specific_location SpecificLocations @relation(fields: [specific_location_id], references: [id])
+  specific_location_id Int
+  assignments Assignments[]
+}
+
+model Categories{
+  id Int @id @default(autoincrement())
+  name String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  flag Boolean
+  objects Object[]
+}
+
+model GeneralLocations{
+  id Int @id @default(autoincrement())
+  name String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  flag Boolean
+  objects Object[]
+  specific_locations SpecificLocations[]
+}
+
+model SpecificLocations{
+  id Int @id @default(autoincrement())
+  name String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  flag Boolean
+  general_locations GeneralLocations @relation(fields: [general_locations_id], references: [id])
+  general_locations_id Int
+  objects Object[]
+  
+}
+
+model States{
+  id Int @id @default(autoincrement())
+  name String
+  abbreviation String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  flag Boolean
+  objects Object[]
+  
+}
+
+model Credentials{
+  id Int @id @default(autoincrement())
+  email String
+  password String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  flag Boolean
+  users Users[]
+}
+
+model Roles{
+  id Int @id @default(autoincrement())
+  type String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  flag Boolean
+  users Users[]
+}
+
+model Users{
+  id Int @id @default(autoincrement())
+  name String
+  lastname String
+  photo String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  flag Boolean
+  roles Roles @relation(fields: [roles_id], references: [id])
+  roles_id Int
+  credentials Credentials @relation(fields: [credentials_id], references: [id])
+  credentials_id Int
+  assignments Assignments[]
+
+}
+
+model Assignments{
+  id Int @id @default(autoincrement())
+  initial_date DateTime @default(now())
+  end_date DateTime
+  description String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  flag Boolean
+  users Users @relation(fields: [user_id], references: [id])
+  user_id Int
+  objects Object @relation(fields: [object_sku], references: [sku])
+  object_sku String
+}
+
+
