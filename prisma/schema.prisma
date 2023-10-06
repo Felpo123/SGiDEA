@@ -16,7 +16,7 @@ model Object{
   quantity Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  flag Boolean
+  flag Boolean @default(true)
   states States @relation(fields: [states_id], references: [id])
   states_id Int
   category Categories @relation(fields: [categories_id], references: [id])
@@ -33,7 +33,7 @@ model Categories{
   name String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  flag Boolean
+  flag Boolean @default(true)
   objects Object[]
 }
 
@@ -42,7 +42,7 @@ model GeneralLocations{
   name String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  flag Boolean
+  flag Boolean @default(true)
   objects Object[]
   specific_locations SpecificLocations[]
 }
@@ -52,7 +52,7 @@ model SpecificLocations{
   name String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  flag Boolean
+  flag Boolean @default(true)
   general_locations GeneralLocations @relation(fields: [general_locations_id], references: [id])
   general_locations_id Int
   objects Object[]
@@ -65,7 +65,7 @@ model States{
   abbreviation String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  flag Boolean
+  flag Boolean @default(true)
   objects Object[]
   
 }
@@ -76,7 +76,7 @@ model Credentials{
   password String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  flag Boolean
+  flag Boolean @default(true)
   users Users?
 }
 
@@ -85,7 +85,7 @@ model Roles{
   type String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  flag Boolean
+  flag Boolean @default(true)
   users Users[]
 }
 
@@ -96,7 +96,7 @@ model Users{
   photo String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  flag Boolean
+  flag Boolean @default(true)
   roles Roles @relation(fields: [roles_id], references: [id])
   roles_id Int
   credentials Credentials @relation(fields: [credentials_id], references: [id])

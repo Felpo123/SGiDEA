@@ -28,29 +28,6 @@ export async function GET(request:Request,{params}:Params){
 
 
 
-export async function DELETE(request:Request,{params}:Params){
-    try{
-        const deletedObject = await prisma.object.delete({where: {sku: params.id}})
-        if(!deletedObject) return NextResponse.json({message: "Object not found"}, {status: 404});
-
-        return NextResponse.json(deletedObject);
-
-    }catch(e){
-        if(e instanceof Error){
-            console.log(e)
-            return NextResponse.json(
-                {
-                    message: e.message,
-                },
-                {
-                    status: 500,
-                }
-            );
-        }
-    }
-    
-}
-
 export async function PUT(request:Request,{params}:Params){
     try{
         const {name, quantity, flag , states_id, categories_id, general_location_id, specific_location_id} = await request.json();
