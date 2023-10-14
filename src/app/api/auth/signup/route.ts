@@ -1,4 +1,4 @@
-import { signup } from "@/module/auth/auth.service";
+import { signup } from "@/services/auth.service";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
