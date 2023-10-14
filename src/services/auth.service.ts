@@ -1,7 +1,8 @@
 import { prisma } from "@/libs/prisma";
 import bcrypt from "bcryptjs";
+import { Credentials, RegistrationData, User } from "next-auth";
 
-export async function login(credentials: any) {
+export async function login(credentials: Credentials): Promise<User>{
   const { email, password } = credentials;
 
   const userFound = await prisma.users.findFirst({
@@ -43,7 +44,7 @@ export async function login(credentials: any) {
   }
 
   return {
-    id: userFound.id + "",
+    id: userFound.id,
     fullname: `${userFound.name} ${userFound.lastname}`,
     photo: userFound.photo,
     email: userFound.credentials.email,
@@ -51,16 +52,7 @@ export async function login(credentials: any) {
   };
 }
 
-interface UserForRegister {
-  name: string;
-  lastname: string;
-  photo: string;
-  roles_id: number;
-  email: string;
-  password: string;
-}
-
-export async function signup(user: UserForRegister) {
+export async function signup(user: RegistrationData) {
   const { name, lastname, photo, roles_id, email, password } = user;
 
   const emailAlreadyExists = await prisma.credentials.findFirst({
