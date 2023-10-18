@@ -14,8 +14,8 @@ model Object{
   sku String @id
   name String
   quantity Int
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
+  updated_at DateTime @updatedAt 
   flag Boolean @default(true)
   states States @relation(fields: [states_id], references: [id])
   states_id Int
@@ -31,7 +31,7 @@ model Object{
 model Categories{
   id Int @id @default(autoincrement())
   name String
-  created_at DateTime @default(now())
+  created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
   updated_at DateTime @updatedAt
   flag Boolean @default(true)
   objects Object[]
@@ -40,7 +40,7 @@ model Categories{
 model GeneralLocations{
   id Int @id @default(autoincrement())
   name String
-  created_at DateTime @default(now())
+  created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
   updated_at DateTime @updatedAt
   flag Boolean @default(true)
   objects Object[]
@@ -50,7 +50,7 @@ model GeneralLocations{
 model SpecificLocations{
   id Int @id @default(autoincrement())
   name String
-  created_at DateTime @default(now())
+  created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
   updated_at DateTime @updatedAt
   flag Boolean @default(true)
   general_locations GeneralLocations @relation(fields: [general_locations_id], references: [id])
@@ -63,7 +63,7 @@ model States{
   id Int @id @default(autoincrement())
   name String
   abbreviation String
-  created_at DateTime @default(now())
+  created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
   updated_at DateTime @updatedAt
   flag Boolean @default(true)
   objects Object[]
@@ -74,7 +74,7 @@ model Credentials{
   id Int @id @default(autoincrement())
   email String
   password String
-  created_at DateTime @default(now())
+  created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
   updated_at DateTime @updatedAt
   flag Boolean @default(true)
   users Users?
@@ -83,7 +83,7 @@ model Credentials{
 model Roles{
   id Int @id @default(autoincrement())
   type String
-  created_at DateTime @default(now())
+  created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
   updated_at DateTime @updatedAt
   flag Boolean @default(true)
   users Users[]
@@ -94,7 +94,7 @@ model Users{
   name String
   lastname String
   photo String
-  created_at DateTime @default(now())
+  created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
   updated_at DateTime @updatedAt
   flag Boolean @default(true)
   roles Roles @relation(fields: [roles_id], references: [id])
@@ -107,12 +107,12 @@ model Users{
 
 model Assignments{
   id Int @id @default(autoincrement())
-  initial_date DateTime @default(now())
+  initial_date DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
   end_date DateTime
   description String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  flag Boolean
+  created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
+  updated_at DateTime @updatedAt 
+  flag Boolean @default(true)
   users Users @relation(fields: [user_id], references: [id])
   user_id Int
   objects Object @relation(fields: [object_sku], references: [sku])
