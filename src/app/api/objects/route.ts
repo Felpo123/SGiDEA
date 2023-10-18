@@ -1,16 +1,16 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/libs/prisma";
+import { prisma } from "@/lib/prisma";
 
 
 export async function GET(){
-    const objects = await prisma.object.findMany()
+    const objects = await prisma.objects.findMany({where: {flag: true}})
     return NextResponse.json(objects);
 }
 
 export async function POST(request:Request){
     const {sku, name, quantity,  states_id, categories_id, general_location_id, specific_location_id} = await request.json();
     try{
-        const newObject = await prisma.object.create({
+        const newObject = await prisma.objects.create({
             data: {
                 sku,
                 name,

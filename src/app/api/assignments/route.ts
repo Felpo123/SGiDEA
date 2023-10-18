@@ -1,8 +1,8 @@
-import { prisma } from "@/libs/prisma";
+import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function GET(){
-    const objects = await prisma.assignments.findMany()
+    const objects = await prisma.assignments.findMany({where: {flag: true}})
     return NextResponse.json(objects);
 }
 

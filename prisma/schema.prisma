@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Object{
+model Objects{
   sku String @id
   name String
   quantity Int
@@ -34,7 +34,7 @@ model Categories{
   created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
   updated_at DateTime @updatedAt
   flag Boolean @default(true)
-  objects Object[]
+  objects Objects[]
 }
 
 model GeneralLocations{
@@ -43,7 +43,7 @@ model GeneralLocations{
   created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
   updated_at DateTime @updatedAt
   flag Boolean @default(true)
-  objects Object[]
+  objects Objects[]
   specific_locations SpecificLocations[]
 }
 
@@ -55,7 +55,7 @@ model SpecificLocations{
   flag Boolean @default(true)
   general_locations GeneralLocations @relation(fields: [general_locations_id], references: [id])
   general_locations_id Int
-  objects Object[]
+  objects Objects[]
   
 }
 
@@ -66,7 +66,7 @@ model States{
   created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
   updated_at DateTime @updatedAt
   flag Boolean @default(true)
-  objects Object[]
+  objects Objects[]
   
 }
 
@@ -83,8 +83,6 @@ model Credentials{
 model Roles{
   id Int @id @default(autoincrement())
   type String
-  created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
-  updated_at DateTime @updatedAt @default(dbgenerated("CURRENT_TIMESTAMP"))
   created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
   updated_at DateTime @updatedAt
   flag Boolean @default(true)
@@ -117,6 +115,6 @@ model Assignments{
   flag Boolean @default(true)
   users Users @relation(fields: [user_id], references: [id])
   user_id Int
-  objects Object @relation(fields: [object_sku], references: [sku])
+  objects Objects @relation(fields: [object_sku], references: [sku])
   object_sku String
 }  
