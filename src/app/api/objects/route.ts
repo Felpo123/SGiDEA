@@ -9,14 +9,13 @@ export async function GET(){
 }
 
 export async function POST(request:Request){
-    const {sku, name, quantity, flag , states_id, categories_id, general_location_id, specific_location_id} = await request.json();
+    const {sku, name, quantity,  states_id, categories_id, general_location_id, specific_location_id} = await request.json();
     try{
         const newObject = await prisma.object.create({
             data: {
                 sku,
                 name,
                 quantity,
-                flag,
                 states_id,
                 categories_id,
                 general_location_id,
