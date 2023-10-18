@@ -1,4 +1,4 @@
-import { prisma } from "@/libs/prisma";
+import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { Credentials, RegistrationData, User } from "next-auth";
 
