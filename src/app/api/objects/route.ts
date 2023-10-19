@@ -3,8 +3,22 @@ import { prisma } from "@/lib/prisma";
 
 
 export async function GET(){
-    const objects = await prisma.objects.findMany({where: {flag: true}})
-    return NextResponse.json(objects);
+    try{
+        const objects = await prisma.objects.findMany({where: {flag: true}})
+        return NextResponse.json(objects);
+
+    }catch(e){
+        if(e instanceof Error){
+            return NextResponse.json(
+                {
+                    message: e.message,
+                },
+                {
+                    status: 500,
+                }
+            );
+        }
+    }
 }
 
 export async function POST(request:Request){
