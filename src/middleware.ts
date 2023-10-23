@@ -1,7 +1,7 @@
 import { NextRequestWithAuth, withAuth } from "next-auth/middleware";
 import { appRoutes } from "./routes";
 import { NextResponse } from "next/server";
-import { Role } from "./types/role";
+import { Role } from "./types/role.d";
 
 export default withAuth(
   function middleware(request: NextRequestWithAuth) {
