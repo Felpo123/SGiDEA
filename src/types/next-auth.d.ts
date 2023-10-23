@@ -1,8 +1,9 @@
-import NextAuth from "next-auth";
+import NextAuth, { User } from "next-auth";
 
 declare module "next-auth" {
   interface Session {
     user: User;
+    token: string;
   }
 
   interface User {
@@ -25,5 +26,11 @@ declare module "next-auth" {
     roles_id: number; // se puede ocupar el nombre del rol en vez del id para que sea mas legible hay que llegar a un acuerdo con el front
     email: string;
     password: string;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    user: User;
   }
 }
