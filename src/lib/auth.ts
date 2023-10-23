@@ -1,5 +1,5 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import { NextAuthOptions } from "next-auth";
+import { NextAuthOptions, User } from "next-auth";
 import { login } from "@/services/auth.service";
 
 export const authOptions: NextAuthOptions = {
@@ -41,12 +41,12 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.user = user;
+      if (user) token.user = user as User;
       return token;
     },
     async session({ session, token }) {
       session.user = token.user as any;
-      console.log(session);
+      session.token = token.jti as any;
       return session;
     },
   },
