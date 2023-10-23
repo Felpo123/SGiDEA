@@ -1,7 +1,7 @@
 "use client";
 import { appRoutes } from "@/routes";
 import { useSession } from "next-auth/react";
-import { Role } from "@/types/role";
+import { Role } from "@/types/role.d";
 import { SidebarItem } from "./sidebar-item";
 import { Home, ClipboardSignature, UserCog, Container } from "lucide-react";
 
@@ -78,15 +78,6 @@ export function SidebarRoutes() {
         ))}
       {session?.user.role === Role.USUARIO &&
         userRoutes.map((route) => (
-          <SidebarItem
-            key={route.href}
-            icon={route.icon}
-            label={route.label}
-            href={route.href}
-          />
-        ))}
-      {session?.user.role === Role.IDEA &&
-        ideaRoutes.map((route) => (
           <SidebarItem
             key={route.href}
             icon={route.icon}
