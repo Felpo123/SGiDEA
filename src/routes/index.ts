@@ -8,3 +8,7 @@ export const appRoutes = Object.freeze({
   assignments: "/assignments",
   users: "/users",
 });
+
+export const adminRoutes = Object.freeze({
+  create_objects: appRoutes.inventory + "/create",
+});
