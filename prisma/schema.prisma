@@ -30,7 +30,7 @@ model Objects{
 
 model Categories{
   id Int @id @default(autoincrement())
-  name String
+  name String @unique
   created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
   updated_at DateTime @updatedAt
   flag Boolean @default(true)
@@ -61,7 +61,7 @@ model SpecificLocations{
 
 model States{
   id Int @id @default(autoincrement())
-  name String
+  name String @unique
   abbreviation String
   created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
   updated_at DateTime @updatedAt
@@ -82,7 +82,7 @@ model Credentials{
 
 model Roles{
   id Int @id @default(autoincrement())
-  type String
+  type String @unique
   created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
   updated_at DateTime @updatedAt
   flag Boolean @default(true)

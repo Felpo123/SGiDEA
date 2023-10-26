@@ -1,8 +1,6 @@
 "use client";
-
-import { Category } from "@/types/category.d";
-import { State } from "@/types/state.d";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -28,48 +26,30 @@ import Link from "next/link";
 import { appRoutes } from "@/routes";
 import React from "react";
 import toast from "react-hot-toast";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 
 const formSchema = z.object({
-  sku: z.string(),
-  name: z
-    .string()
-    .min(1)
-    .max(255, { message: "Porfavor ingresa el nombre de objeto" }),
-  quantity: z.coerce
-    .number()
-    .int()
-    .min(0, { message: "Porfavor ingresa la cantidad de objetos" }),
-  state: z
-    .string()
-    .min(1, { message: "Porfavor ingresa el estado del objeto" }),
-  category: z.string().min(1, { message: "Porfavor ingresa la categoria" }),
+  initial_date: z.date(),
+  end_date: z.date().min(new Date()),
+  //   user_id: z.number(),
+  //   object_id: z.number(),
+  //   description: z.string().min(1).max(255),
 });
 
-const categorys = [
-  Category.ARTICULO_DE_OFICINA,
-  Category.COMPUTACION,
-  Category.ELECTRONICA,
-  Category.FERRETERIA,
-  Category.FUNGIBLE,
-  Category.MATERIAL_DE_ASEO,
-  Category.SUPERMERCADO,
-  Category.MOBILIARIO,
-  Category.MOBILIARIO_DE_OFICINA,
-  Category.COCINA,
-  Category.ARTICULO_ELECTRICO,
-];
-const states = [State.NUEVO, State.USADO, State.MAL_ESTADO];
-
-function CreateObjectPage() {
+function CreateAssignmentPage() {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      sku: "AA1",
-      name: "",
-      quantity: 0,
-      state: "",
-      category: "",
+      initial_date: new Date(),
+      end_date: new Date(),
     },
   });
 
@@ -77,23 +57,7 @@ function CreateObjectPage() {
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await fetch("/api/objects", {
-        method: "POST",
-        body: JSON.stringify({
-          values,
-          general_location_id: 1,
-          specific_location_id: 1,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      console.log(response);
-
-      if (!response.ok) {
-        throw new Error("Error al ingresar el objeto");
-      }
-      toast.success("Objeto ingresado correctamente");
+      console.log(values);
     } catch (error) {
       toast.error("Error al ingresar el objeto");
     }
@@ -110,34 +74,61 @@ function CreateObjectPage() {
           >
             <FormField
               control={form.control}
-              name="sku"
+              name="initial_date"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel> Código de referencia</FormLabel>
+                  <FormLabel>Fecha de inicio</FormLabel>
                   <FormDescription>
-                    Stock-keeping unit (autogenerado)
+                    Se establece con la fecha actual
                   </FormDescription>
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
-              name="name"
+              name="end_date"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nombre del objeto</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={isSubmitting}
-                      placeholder="e.g. Cafetera west bend 9 litros"
-                      {...field}
-                    />
-                  </FormControl>
+                <FormItem className="flex flex-col">
+                  <FormLabel>Fecha de termino</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-[240px] pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date < new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormDescription>
+                    Fecha en la que se termina la asignación
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="quantity"
               render={({ field }) => (
@@ -208,7 +199,7 @@ function CreateObjectPage() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
 
             <div className="flex items-center gap-x-2">
               <Link href={appRoutes.inventory}>
@@ -227,4 +218,4 @@ function CreateObjectPage() {
   );
 }
 
-export default CreateObjectPage;
+export default CreateAssignmentPage;

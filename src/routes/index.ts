@@ -11,4 +11,5 @@ export const appRoutes = Object.freeze({
 
 export const adminRoutes = Object.freeze({
   create_objects: appRoutes.inventory + "/create",
+  create_assignments: appRoutes.assignments + "/create",
 });
