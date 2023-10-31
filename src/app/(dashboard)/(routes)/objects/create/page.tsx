@@ -61,8 +61,7 @@ const categorys = [
 const states = [State.NUEVO, State.USADO, State.MAL_ESTADO];
 
 function CreateObjectPage() {
-  const router = useRouter();
-  const form = useForm<z.infer<typeof formSchema>>({
+    const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       sku: "AA1",
