@@ -23,7 +23,6 @@ export async function POST(request: Request) {
   const { values, general_location_id, specific_location_id } =
     await request.json();
   const {
-    sku,
     name,
     quantity,
     state: states_id,
@@ -32,7 +31,6 @@ export async function POST(request: Request) {
   try {
     const newObject = await prisma.objects.create({
       data: {
-        sku,
         name,
         quantity,
         category: {
@@ -41,15 +39,13 @@ export async function POST(request: Request) {
         states: {
           connect: { name: states_id },
         },
-        general_location: {
-          connect: { id: 1 },
-        },
         specific_location: { connect: { id: 1 } },
       },
     });
     return NextResponse.json(newObject);
   } catch (e) {
     if (e instanceof Error) {
+      console.log(e.message)
       return NextResponse.json(
         {
           message: e.message,

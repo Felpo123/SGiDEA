@@ -39,7 +39,6 @@ export async function PUT(request:Request,{params}:Params){
                 flag,
                 states_id,
                 categories_id,
-                general_location_id,
                 specific_location_id
             }
         })

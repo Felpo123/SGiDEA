@@ -20,5 +20,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/", "/objects", "/assignments", "/users", "/api/:path*"],
+  matcher: ["/", "/objects", "/assignments", "/users"],
 };

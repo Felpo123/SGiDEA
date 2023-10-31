@@ -31,6 +31,8 @@ const getObjects = async () => {
 async function CreateAssignmentPage() {
   const usersData = await getUsers() as Users[];
   const objectsData = await getObjects() as Objects[];
+
+  console.log(usersData, objectsData)
    return (
     <div className="max-w-5xl mx-auto flex md:items-center md:justify-center h-full p-6">
       <CreateAssignmentForm usersData={usersData} objectsData={objectsData} />  

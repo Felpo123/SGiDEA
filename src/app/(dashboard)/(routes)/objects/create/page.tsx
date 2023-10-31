@@ -35,15 +35,15 @@ const formSchema = z.object({
   name: z
     .string()
     .min(1)
-    .max(255, { message: "Porfavor ingresa el nombre de objeto" }),
+    .max(255, { message: "Por favor ingresa el nombre de objeto" }),
   quantity: z.coerce
     .number()
     .int()
-    .min(0, { message: "Porfavor ingresa la cantidad de objetos" }),
+    .min(0, { message: "Por favor ingresa la cantidad de objetos" }),
   state: z
     .string()
-    .min(1, { message: "Porfavor ingresa el estado del objeto" }),
-  category: z.string().min(1, { message: "Porfavor ingresa la categoria" }),
+    .min(1, { message: "Por favor ingresa el estado del objeto" }),
+  category: z.string().min(1, { message: "Por favor ingresa la categoria" }),
 });
 
 const categorys = [
