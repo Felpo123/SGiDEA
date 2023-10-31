@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Objects{
-  sku String @id
+  sku String @id @default(uuid())
   name String
   quantity Int
   created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
@@ -20,9 +20,7 @@ model Objects{
   states States @relation(fields: [states_id], references: [id])
   states_id Int
   category Categories @relation(fields: [categories_id], references: [id])
-  categories_id Int
-  general_location GeneralLocations @relation(fields: [general_location_id], references: [id])
-  general_location_id Int
+  categories_id Int 
   specific_location SpecificLocations @relation(fields: [specific_location_id], references: [id])
   specific_location_id Int
   assignments Assignments[]
@@ -43,7 +41,6 @@ model GeneralLocations{
   created_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP"))
   updated_at DateTime @updatedAt
   flag Boolean @default(true)
-  objects Objects[]
   specific_locations SpecificLocations[]
 }
 

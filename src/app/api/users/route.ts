@@ -3,8 +3,8 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
     try{
-        const objects = await prisma.users.findMany({where: {flag: true}})
-        return NextResponse.json(objects);
+        const users = await prisma.users.findMany({where: {flag: true}})
+        return NextResponse.json(users);
 
     }catch(e){
         if(e instanceof Error){

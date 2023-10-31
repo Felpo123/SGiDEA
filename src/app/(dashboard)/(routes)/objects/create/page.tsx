@@ -28,6 +28,7 @@ import Link from "next/link";
 import { appRoutes } from "@/routes";
 import React from "react";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 const formSchema = z.object({
   sku: z.string(),
@@ -64,7 +65,7 @@ function CreateObjectPage() {
     const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      sku: "AA1",
+      sku: "A",
       name: "",
       quantity: 0,
       state: "",
@@ -74,25 +75,35 @@ function CreateObjectPage() {
 
   const { isSubmitting, isValid } = form.formState;
 
-  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      const response = await fetch("/api/objects", {
-        method: "POST",
-        body: JSON.stringify({
-          values,
-          general_location_id: 1,
-          specific_location_id: 1,
-        }),
+  const saveObject = async (values: z.infer<typeof formSchema>,general_location_id: number,specific_location_id: number) => {
+    const response = await axios.post(
+      "http://localhost:3000/api/objects",
+      {        
+        values,
+        general_location_id,
+        specific_location_id,
+      },
+      {
         headers: {
           "Content-Type": "application/json",
         },
-      });
-      console.log(response);
-
-      if (!response.ok) {
-        throw new Error("Error al ingresar el objeto");
       }
-      toast.success("Objeto ingresado correctamente");
+    );
+    
+    return response.data    
+  }
+
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {     
+      toast.promise(
+        saveObject(values,1,1),
+         {
+           loading: 'Guardando...',
+           success: <b>Objeto guardado!</b>,
+           error: <b>Error al ingresar el objeto.</b>,
+         }
+       );
+      form.reset()
     } catch (error) {
       toast.error("Error al ingresar el objeto");
     }
@@ -162,7 +173,7 @@ function CreateObjectPage() {
                   <FormLabel>Estado General</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -189,7 +200,7 @@ function CreateObjectPage() {
                   <FormLabel>Categoria del objeto</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
