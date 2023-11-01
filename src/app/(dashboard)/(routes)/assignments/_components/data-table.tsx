@@ -52,9 +52,9 @@ export function AssignmentDataTable<TData, TValue>({
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
       )
-      
-      console.debug(data)
 
+      console.log(session)
+      
       if (session?.user?.role === "ADMIN" && columns.length == 5) {
         columns.push({
         id: "actions",

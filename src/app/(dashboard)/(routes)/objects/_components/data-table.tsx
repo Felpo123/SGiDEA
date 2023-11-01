@@ -37,6 +37,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
+import { Role } from "@/types/role.d"
 
 interface ObjectDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -46,14 +47,16 @@ interface ObjectDataTableProps<TData, TValue> {
 export function ObjectDataTable<TData, TValue>({
     columns,
     data,
-  }: ObjectDataTableProps<TData, TValue>) {     
-    const { data: session } = useSession();
+    role,
+  }: ObjectDataTableProps<TData, TValue> & { role: Role }) {     
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
       )
 
-      if (session?.user?.role === "ADMIN" && columns.length == 5) {
+      console.log("len", columns.length)
+      if (role === Role.ADMINISTRADOR && columns.length == 6) {
+        console.log("hola")
         columns.push({
         id: "actions",
         cell: ({ row }) => {
