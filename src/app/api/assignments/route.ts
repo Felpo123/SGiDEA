@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function GET(){
-    const objects = await prisma.assignments.findMany({where: {flag: true}})
+    const objects = await prisma.assignments.findMany({where: {flag: true}, include: {users: true, objects: true}})
     return NextResponse.json(objects);
 }
 

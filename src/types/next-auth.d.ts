@@ -11,7 +11,7 @@ declare module "next-auth" {
     fullname: string;
     photo: string;
     email: string;
-    role: string;
+    role: Role;
   }
 
   interface Credentials {
