@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const objects = await prisma.objects.findMany({ where: { flag: true } });
+    const objects = await prisma.objects.findMany({ where: { flag: true }, include: { category: { select: {name: true}}, states: true, specific_location: true }});
     return NextResponse.json(objects);
   } catch (e) {
     if (e instanceof Error) {
