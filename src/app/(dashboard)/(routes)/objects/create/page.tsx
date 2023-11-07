@@ -29,6 +29,8 @@ import { appRoutes } from "@/routes";
 import React from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { ConfirmModal } from "@/components/confirm-modal";
 
 const formSchema = z.object({
   sku: z.string(),
@@ -93,20 +95,20 @@ function CreateObjectPage() {
     return response.data    
   }
 
-  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {     
-      toast.promise(
-        saveObject(values,1,1),
-         {
-           loading: 'Guardando...',
-           success: <b>Objeto guardado!</b>,
-           error: <b>Error al ingresar el objeto.</b>,
-         }
-       );
-      form.reset()
-    } catch (error) {
-      toast.error("Error al ingresar el objeto");
-    }
+   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+      try {    
+        toast.promise(
+          saveObject(values,1,1),
+           {
+             loading: 'Guardando...',
+             success: <b>Objeto guardado!</b>,
+             error: <b>Error al ingresar el objeto.</b>,
+           }
+         );
+        form.reset()
+      } catch (error) {
+        toast.error("Error al ingresar el objeto");
+      }
   };
 
   return (
@@ -226,9 +228,11 @@ function CreateObjectPage() {
                   Cancelar
                 </Button>
               </Link>
-              <Button type="submit" disabled={!isValid || isSubmitting}>
-                Ingresar
-              </Button>
+              <ConfirmModal onConfirm={form.handleSubmit(handleSubmit)}>
+                  <Button disabled={!isValid || isSubmitting}>
+                      Ingresar
+                  </Button>
+              </ConfirmModal>            
             </div>
           </form>
         </Form>

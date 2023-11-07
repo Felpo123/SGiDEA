@@ -45,7 +45,6 @@ export async function POST(request: Request) {
     return NextResponse.json(newObject);
   } catch (e) {
     if (e instanceof Error) {
-      console.log(e.message)
       return NextResponse.json(
         {
           message: e.message,

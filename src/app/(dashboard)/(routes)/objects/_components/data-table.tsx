@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import * as React from "react"
- 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import * as React from "react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 import {
   ColumnDef,
@@ -15,98 +15,118 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-  } from "@/components/ui/table"
-import { useSession } from "next-auth/react"
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useSession } from "next-auth/react";
 
-import { MoreHorizontal } from "lucide-react"
+import { MoreHorizontal } from "lucide-react";
 
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-  } from "@/components/ui/dropdown-menu"
-import { Role } from "@/types/role.d"
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Role } from "@/types/role.d";
+import { ConfirmModal } from "@/components/confirm-modal";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialogHeader } from "@/components/ui/alert-dialog";
+import { Objects } from "@prisma/client";
 
 interface ObjectDataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  role: Role;
 }
 
 export function ObjectDataTable<TData, TValue>({
-    columns,
-    data,
-    role,
-  }: ObjectDataTableProps<TData, TValue> & { role: Role }) {     
-    const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-        []
-      )
-
-      console.log("len", columns.length)
-      if (role === Role.ADMINISTRADOR && columns.length == 6) {
-        console.log("hola")
-        columns.push({
-        id: "actions",
-        cell: ({ row }) => {
-            const object = row.original
-    
-            return (
+  columns,
+  data,
+  role,
+}: ObjectDataTableProps<TData, TValue> & { role: Role }) {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
+  
+  if (role === Role.ADMINISTRADOR && columns.length == 6) {
+    columns.push({
+      id: "actions",
+      cell: ({ row }) => {
+        const object = row.original as Objects;     
+        return (
+          <Dialog>
             <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0">
-                    <span className="sr-only">Abrir Menu</span>
-                    <MoreHorizontal className="h-4 w-4" />
+                  <span className="sr-only">Abrir Menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
                 </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Editar</DropdownMenuItem>
+                <DialogTrigger asChild>
                 <DropdownMenuItem>Eliminar</DropdownMenuItem>
-                </DropdownMenuContent>
+                </DialogTrigger>
+              </DropdownMenuContent>
             </DropdownMenu>
-            )
-        },
-        })
-    }
-
-    const table = useReactTable({
-      data,
-      columns,
-      getCoreRowModel: getCoreRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
-      onSortingChange: setSorting,
-      getSortedRowModel: getSortedRowModel(),
-      onColumnFiltersChange: setColumnFilters,
-      getFilteredRowModel: getFilteredRowModel(),
-      state: {
-        sorting,
-        columnFilters,
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Estas seguro de eliminar {object.name}?</DialogTitle>
+                <DialogDescription>
+                    Esta acción no se puede deshacer. ¿Está seguro de que desea
+                    eliminar permanentemente este registro de nuestros servidores?
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose asChild>
+                <Button onClick={() => {console.log(object)}}>Confirmar</Button>
+                </DialogClose>           
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        );
       },
-    })
-   
-    return (
+    });
+  }
+
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      sorting,
+      columnFilters,
+    },
+  });
+
+  return (
     <div>
       <div className="flex items-center py-4">
         <Input
-            placeholder="Filtrar objetos..."
-            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
+          placeholder="Filtrar objetos..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
+          }
+          className="max-w-sm"
         />
       </div>
       <div className="rounded-md border">
@@ -124,7 +144,7 @@ export function ObjectDataTable<TData, TValue>({
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -138,14 +158,20 @@ export function ObjectDataTable<TData, TValue>({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   No results.
                 </TableCell>
               </TableRow>
@@ -172,6 +198,5 @@ export function ObjectDataTable<TData, TValue>({
         </Button>
       </div>
     </div>
-    )
-  }
-
+  );
+}

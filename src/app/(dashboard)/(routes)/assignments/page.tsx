@@ -28,14 +28,14 @@ async function getData(role: Role, id: number): Promise<Object[]> {
 }
 
 async function Assignments() {
-  const session = await getServerSession(authOptions) as Session
-
-  const data = await getData(session?.user?.role, session.user.id)
+  const session = await getServerSession(authOptions) as Session;
+  const {role, id} = session.user;
+  const data = await getData(role,id)
 
   return (
     <div>
       <div className="container mx-auto py-10">
-        <AssignmentDataTable columns={columns} data={data} />
+        <AssignmentDataTable columns={columns} data={data} role={role} />
       </div>
       <Link href={adminRoutes.create_assignments}>
         <Button>Asignar objeto</Button>

@@ -1,8 +1,10 @@
 "use client"
  
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal, Text } from "lucide-react"
 import { ColumnDef } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
+import { format } from "date-fns"
+import { Badge } from "@/components/ui/badge"
 
 export const columns: ColumnDef<Object>[] = [
     {
@@ -18,6 +20,11 @@ export const columns: ColumnDef<Object>[] = [
           </Button>
         )
       },
+      cell: ({row}) => {
+        const initialDate = row.getValue("initial_date") as Date;
+        const formattedDate = format(new Date(initialDate), 'dd/MM/yyyy');
+        return formattedDate;
+      }
     },
     {
       accessorKey: "end_date",
@@ -32,10 +39,23 @@ export const columns: ColumnDef<Object>[] = [
           </Button>
         )
       },
+      cell: ({row}) => {
+        const endDate = row.getValue("end_date") as Date;
+        const formattedDate = format(new Date(endDate), 'dd/MM/yyyy');
+        return formattedDate;
+      }
     },
     {
       accessorKey: "description",
       header: "Descripción",
+      cell: ({row}) => {
+        const description = row.getValue("description") as string;
+        return (
+          <div className="max-w-xs break-words">
+            {description}
+          </div>  
+        )      
+      }
     },
     {
       accessorKey: "users.name",
@@ -45,4 +65,16 @@ export const columns: ColumnDef<Object>[] = [
       accessorKey: "objects.name",
       header: "Objecto",
     },
+    {
+      accessorKey: "flag",
+      header: "Estado",
+      cell: ({row}) => {
+        const state = row.getValue("flag") as boolean;
+        return(
+          <div>
+            {state ? <Badge variant="default">Activo</Badge> : <Badge variant="outline">Inactivo</Badge>}
+          </div>
+        )
+      }
+    }
   ]
