@@ -1,6 +1,8 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import * as z from "zod";
 import {
   Form,
@@ -11,25 +13,16 @@ import {
   FormMessage,
   FormItem,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import { appRoutes } from "@/routes";
-import React from "react";
-import toast from "react-hot-toast";
-import axios from "axios";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { ConfirmModal } from "@/components/confirm-modal";
-import { states } from "@/constants/states";
-import { categories} from "@/constants/categories";
+import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
 import SelectContentAndItem from "@/components/select-content";
+import { states } from "@/constants/states";
+import { categories } from "@/constants/categories";
+import { Categories, Objects, States } from "@prisma/client";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
+import axios from "axios";
 
 const formSchema = z.object({
   sku: z.string(),
@@ -47,75 +40,69 @@ const formSchema = z.object({
   category: z.string().min(1, { message: "Por favor ingresa la categoria" }),
 });
 
-function CreateObjectPage() {
-    const form = useForm<z.infer<typeof formSchema>>({
+interface UpdateObjectFormProps {
+  object: Objects;
+  state: States;
+  category: string;
+}
+
+function UpdateObjectForm({ object, state, category }: UpdateObjectFormProps) {
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      sku: "A",
-      name: "",
-      quantity: 0,
-      state: "",
-      category: "",
+      sku: object.sku,
+      name: object.name,
+      quantity: object.quantity,
+      state: state.name,
+      category: category,
     },
   });
 
   const { isSubmitting, isValid } = form.formState;
 
-  const saveObject = async (values: z.infer<typeof formSchema>,general_location_id: number,specific_location_id: number) => {
-    const response = await axios.post(
-      "http://localhost:3000/api/objects",
-      {        
-        values,
-        general_location_id,
-        specific_location_id,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
+  const updateObject = async (
+    values: z.infer<typeof formSchema>,
+    general_location_id: number,
+    specific_location_id: number
+  ) => {
+    try {
+      const { data } = await axios.put(
+        `/api/objects/${object.sku}`,
+        {
+          ...values,
+          general_location_id,
+          specific_location_id,
         },
-      }
-    );
-    
-    return response.data    
-  }
-
-   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
-      try {    
-        toast.promise(
-          saveObject(values,1,1),
-           {
-             loading: 'Guardando...',
-             success: <b>Objeto guardado!</b>,
-             error: <b>Error al ingresar el objeto.</b>,
-           }
-         );
-        form.reset()
-      } catch (error) {
-        toast.error("Error al ingresar el objeto");
-      }
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (error) {
+      throw error;
+    }
   };
 
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      toast.promise(updateObject(values, 1, 1), {
+        loading: "Actualizando...",
+        success: <b>Objeto actualizado!</b>,
+        error: <b>Error al actualizar el objeto.</b>,
+      });
+    } catch (error) {
+      toast.error("Error al actualizar el objeto");
+    }
+  };
   return (
     <div className="max-w-5xl mx-auto flex md:items-center md:justify-center h-full p-6">
       <div>
-        <h3 className="text-2xl">Registro de Ingreso de Productos</h3>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-8 mt-8"
+            className="space-y-2"
           >
-            <FormField
-              control={form.control}
-              name="sku"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel> Código de referencia</FormLabel>
-                  <FormDescription>
-                    Stock-keeping unit (autogenerado)
-                  </FormDescription>
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="name"
@@ -157,16 +144,13 @@ function CreateObjectPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Estado General</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona el estado" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContentAndItem array={states}/>
+                    <SelectContentAndItem array={states} />
                   </Select>
                   <FormMessage />
                 </FormItem>
@@ -178,33 +162,26 @@ function CreateObjectPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Categoria del objeto</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona la categoria" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContentAndItem array={categories}/>
+                    <SelectContentAndItem array={categories} />
                   </Select>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <div className="flex items-center gap-x-2">
-              <Link href={appRoutes.inventory}>
-                <Button type="button" variant="outline">
-                  Cancelar
-                </Button>
-              </Link>
-              <ConfirmModal onConfirm={form.handleSubmit(handleSubmit)}>
-                  <Button disabled={!isValid || isSubmitting}>
-                      Ingresar
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button type="submit" disabled={!isValid || isSubmitting}>
+                    Guardar
                   </Button>
-              </ConfirmModal>            
+                </DialogClose>
+              </DialogFooter>
             </div>
           </form>
         </Form>
@@ -213,4 +190,4 @@ function CreateObjectPage() {
   );
 }
 
-export default CreateObjectPage;
+export default UpdateObjectForm;

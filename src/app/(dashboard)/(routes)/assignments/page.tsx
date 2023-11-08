@@ -33,14 +33,9 @@ async function Assignments() {
   const data = await getData(role,id)
 
   return (
-    <div>
       <div className="container mx-auto py-10">
         <AssignmentDataTable columns={columns} data={data} role={role} />
-      </div>
-      <Link href={adminRoutes.create_assignments}>
-        <Button>Asignar objeto</Button>
-      </Link>
-    </div>
+      </div>   
   );
 }
 
