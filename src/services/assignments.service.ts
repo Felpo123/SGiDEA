@@ -6,7 +6,6 @@ export async function endAssignment(date:Date, id:number, sku:string){
     console.log(assignment)
     
     if(assignment){
-        date.setHours(date.getHours() + 3)
         const job = schedule.scheduleJob(date, async function(){
             console.log("Assignment ended")
             const object = await prisma.objects.update({where: {sku: sku}, data: {quantity: {increment:1}}})

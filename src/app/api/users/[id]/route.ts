@@ -6,7 +6,7 @@ interface Params {
 
 }
 
-export async function PATCH(request:Request,{params}:Params) {
+export async function PUT(request:Request,{params}:Params) {
 
     try{
         const disabledUser = await prisma.users.update({
