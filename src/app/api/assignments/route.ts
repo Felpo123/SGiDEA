@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { endAssignment } from "@/services/assignments.service";
 
 export async function GET(){
     const objects = await prisma.assignments.findMany({ include: {users: true, objects: true}})
@@ -20,7 +21,9 @@ export async function POST(request:Request){
                 object_sku
             }
         })
-        const object = await prisma.objects.update({where: {sku: object_sku}, data: {quantity: {decrement:1}}})   
+        const object = await prisma.objects.update({where: {sku: object_sku}, data: {quantity: {decrement:1}}})
+        console.log(newAssignment.end_date)
+        endAssignment(newAssignment.end_date, newAssignment.id, object_sku)   
         return NextResponse.json(newAssignment);
         }
         return NextResponse.json({message: "Object not found or is inactive"}, {status: 404})
