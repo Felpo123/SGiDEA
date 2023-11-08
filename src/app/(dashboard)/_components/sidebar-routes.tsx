@@ -12,6 +12,11 @@ const adminRoutes = [
     href: appRoutes.home,
   },
   {
+    icon: Container,
+    label: "Inventario",
+    href: appRoutes.inventory,
+  },
+  {
     icon: ClipboardSignature,
     label: "Asignaciones",
     href: appRoutes.assignments,
@@ -20,11 +25,6 @@ const adminRoutes = [
     icon: UserCog,
     label: "Usuarios",
     href: appRoutes.users,
-  },
-  {
-    icon: Container,
-    label: "Inventario",
-    href: appRoutes.inventory,
   },
 ];
 const ideaRoutes = [

@@ -25,45 +25,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Objects, States } from "@prisma/client";
-import { adminRoutes } from "@/routes";
 import Link from "next/link";
-import { Role } from "@/types/role.d";
-import DropdownMenuObjectsTable from "./dropdown-menu";
-import UpdateObjectForm from "./update-form";
+import { adminRoutes } from "@/routes";
 
-interface ObjectDataTableProps<TData, TValue> {
+interface UsersDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  role: Role;
+  data: TData[];  
 }
 
-export function ObjectDataTable<TData, TValue>({
+export function UsersDataTable<TData, TValue>({
   columns,
-  data,
-  role,
-}: ObjectDataTableProps<TData, TValue> & { role: Role }) {
+  data,  
+}: UsersDataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  
-  if (role === Role.ADMINISTRADOR && columns.length == 6) {
-    columns.push({
-      id: "actions",
-      cell: ({ row }) => {
-        const object = row.original as Objects;        
-        const states = (row.original as any).states as States;
-        const category = (row.original as any).category.name as string;         
-        return (
-         < DropdownMenuObjectsTable>
-          <UpdateObjectForm object={object} state={states} category={category} />
-         </DropdownMenuObjectsTable>     
-        );
-      },
-    });
-  }
 
   const table = useReactTable({
     data,
@@ -82,18 +59,18 @@ export function ObjectDataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4 justify-between">
+      <div className="flex items-center py-4 justify-between    ">
         <Input
-          placeholder="Filtrar objetos..."
+          placeholder="Filtrar usuarios..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
-        <Link href={adminRoutes.create_objects}>
-         <Button> Crear Objecto</Button>
-        </Link>
+            <Link href={adminRoutes.create_users}>
+            <Button>Crear Usuario</Button>
+            </Link>
       </div>
       <div className="rounded-md border">
         <Table>

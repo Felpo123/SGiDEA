@@ -6,11 +6,11 @@ import { Role } from "./types/role.d";
 export default withAuth(
   function middleware(request: NextRequestWithAuth) {
     if (
-      request.nextUrl.pathname === appRoutes.users &&
+      request.nextUrl.pathname.startsWith("/users") &&
       request.nextauth.token?.user.role !== Role.ADMINISTRADOR
     ) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    }    
   },
   {
     callbacks: {

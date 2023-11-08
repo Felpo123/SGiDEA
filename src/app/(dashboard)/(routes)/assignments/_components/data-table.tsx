@@ -40,6 +40,8 @@ import {
 import { Assignments } from "@prisma/client"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Role } from "@/types/role.d"
+import Link from "next/link"
+import { adminRoutes } from "@/routes"
 
 interface ObjectDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -119,7 +121,7 @@ export function AssignmentDataTable<TData, TValue>({
    
     return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center py-4 justify-between">
         <Input
             placeholder="Filtrar objetos..."
             value={(table.getColumn("description")?.getFilterValue() as string) ?? ""}
@@ -128,6 +130,9 @@ export function AssignmentDataTable<TData, TValue>({
             }
             className="max-w-sm"
         />
+         <Link href={adminRoutes.create_assignments}>
+        <Button>Asignar objeto</Button>
+      </Link>
       </div>
       <div className="rounded-md border">
         <Table>

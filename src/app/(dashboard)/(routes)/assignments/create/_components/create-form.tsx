@@ -94,7 +94,7 @@ function CreateAssignmentForm({usersData, objectsData}: CreateAssignmentFormProp
 
   return (
       <div>
-        <h1 className="text-2xl">Registro de Asignaciones</h1>
+        <h3 className="text-2xl">Registro de Asignaciones</h3>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
