@@ -7,12 +7,12 @@ interface Params {
 
 export async function PUT(request:Request,{params}:Params){
     try{
-       const assignment = await prisma.assignments.update({where: {id: parseInt(params.id)}, data: {flag: false}})
+       const assignment = await prisma.assignments.findUnique({where: {id: parseInt(params.id)}})
        if(assignment){
         const object = await prisma.objects.update({where: {sku: assignment.object_sku}, data: {quantity: {increment:1}}})
-        console.log(object)
+        return NextResponse.json(object);
        }
-        return NextResponse.json(assignment);
+        
     }catch(e){
         if(e instanceof Error){
             return NextResponse.json(
