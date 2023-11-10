@@ -20,16 +20,38 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { AlertDialogFooter } from "@/components/ui/alert-dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import UpdateObjectForm from "./update-form";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { Objects } from "@prisma/client";
 
 interface DropdownMenuObjectsTableProps {
   children: React.ReactNode;
+  object: Objects;
 }
 
-function DropdownMenuObjectsTable({ children }: DropdownMenuObjectsTableProps) {
+async function deleteConfirm(sku: string) {
+  try {
+    toast.promise(
+      axios.delete(`/api/objects/${sku}/delete`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+      {
+        loading: "Eliminando...",
+        success: <b>Objeto eliminado!</b>,
+        error: <b>Error al eliminar el objeto.</b>,
+      }
+    );
+  } catch (error) {
+    toast.error("Error al eliminar el objeto");
+  }
+}
+
+function DropdownMenuObjectsTable({
+  children,
+  object,
+}: DropdownMenuObjectsTableProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -66,7 +88,7 @@ function DropdownMenuObjectsTable({ children }: DropdownMenuObjectsTableProps) {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Estas seguro de eliminar ?</DialogTitle>
+              <DialogTitle>¿Está seguro de eliminar {object.name}?</DialogTitle>
               <DialogDescription>
                 Esta acción no se puede deshacer. ¿Está seguro de que desea
                 eliminar permanentemente este registro de nuestros servidores?
@@ -76,7 +98,7 @@ function DropdownMenuObjectsTable({ children }: DropdownMenuObjectsTableProps) {
               <DialogClose asChild>
                 <Button
                   onClick={() => {
-                    console.log("Hola");
+                    deleteConfirm(object.sku);
                   }}
                 >
                   Confirmar

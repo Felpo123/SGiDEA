@@ -25,10 +25,20 @@ import { appRoutes } from "@/routes";
 import React from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { ConfirmModal } from "@/components/confirm-modal";
 import { states } from "@/constants/states";
-import { categories} from "@/constants/categories";
+import { categories } from "@/constants/categories";
 import SelectContentAndItem from "@/components/select-content";
 
 const formSchema = z.object({
@@ -48,7 +58,7 @@ const formSchema = z.object({
 });
 
 function CreateObjectPage() {
-    const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       sku: "A",
@@ -61,10 +71,14 @@ function CreateObjectPage() {
 
   const { isSubmitting, isValid } = form.formState;
 
-  const saveObject = async (values: z.infer<typeof formSchema>,general_location_id: number,specific_location_id: number) => {
+  const saveObject = async (
+    values: z.infer<typeof formSchema>,
+    general_location_id: number,
+    specific_location_id: number
+  ) => {
     const response = await axios.post(
       "http://localhost:3000/api/objects",
-      {        
+      {
         values,
         general_location_id,
         specific_location_id,
@@ -75,24 +89,21 @@ function CreateObjectPage() {
         },
       }
     );
-    
-    return response.data    
-  }
 
-   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
-      try {    
-        toast.promise(
-          saveObject(values,1,1),
-           {
-             loading: 'Guardando...',
-             success: <b>Objeto guardado!</b>,
-             error: <b>Error al ingresar el objeto.</b>,
-           }
-         );
-        form.reset()
-      } catch (error) {
-        toast.error("Error al ingresar el objeto");
-      }
+    return response.data;
+  };
+
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      toast.promise(saveObject(values, 1, 1), {
+        loading: "Guardando...",
+        success: <b>Objeto guardado!</b>,
+        error: <b>Error al ingresar el objeto.</b>,
+      });
+      form.reset();
+    } catch (error) {
+      toast.error("Error al ingresar el objeto");
+    }
   };
 
   return (
@@ -102,7 +113,7 @@ function CreateObjectPage() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-8 mt-8"
+            className="space-y-4 mt-2"
           >
             <FormField
               control={form.control}
@@ -157,16 +168,13 @@ function CreateObjectPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Estado General</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona el estado" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContentAndItem array={states}/>
+                    <SelectContentAndItem array={states} />
                   </Select>
                   <FormMessage />
                 </FormItem>
@@ -178,16 +186,13 @@ function CreateObjectPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Categoria del objeto</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona la categoria" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContentAndItem array={categories}/>
+                    <SelectContentAndItem array={categories} />
                   </Select>
                   <FormMessage />
                 </FormItem>
@@ -201,10 +206,8 @@ function CreateObjectPage() {
                 </Button>
               </Link>
               <ConfirmModal onConfirm={form.handleSubmit(handleSubmit)}>
-                  <Button disabled={!isValid || isSubmitting}>
-                      Ingresar
-                  </Button>
-              </ConfirmModal>            
+                <Button disabled={!isValid || isSubmitting}>Ingresar</Button>
+              </ConfirmModal>
             </div>
           </form>
         </Form>

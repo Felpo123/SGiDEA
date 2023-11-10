@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { adminRoutes } from "@/routes";
-import { columns } from "./_components/columns"
+import { columns } from "./_components/columns";
 import axios from "axios";
 import Link from "next/link";
 import { AssignmentDataTable } from "./_components/data-table";
@@ -10,15 +10,15 @@ import { Role } from "@/types/role.d";
 
 async function getData(role: Role, id: number): Promise<Object[]> {
   try {
-    let url = '' 
+    let url = "";
     if (role == Role.ADMINISTRADOR) {
-      url = 'http://localhost:3000/api/assignments'
+      url = "http://localhost:3000/api/assignments";
     } else {
-      url = 'http://localhost:3000/api/assignments/'+id
+      url = "http://localhost:3000/api/assignments/" + id;
     }
     const response = await axios.get(url, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
     return response.data;
@@ -28,14 +28,14 @@ async function getData(role: Role, id: number): Promise<Object[]> {
 }
 
 async function Assignments() {
-  const session = await getServerSession(authOptions) as Session;
-  const {role, id} = session.user;
-  const data = await getData(role,id)
+  const session = (await getServerSession(authOptions)) as Session;
+  const { role, id } = session.user;
+  const data = await getData(role, id);
 
   return (
-      <div className="container mx-auto py-10">
-        <AssignmentDataTable columns={columns} data={data} role={role} />
-      </div>   
+    <div className="container mx-auto py-10">
+      <AssignmentDataTable columns={columns} data={data} role={role} />
+    </div>
   );
 }
 
