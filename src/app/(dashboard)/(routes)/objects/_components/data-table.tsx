@@ -1,7 +1,5 @@
 "use client";
-
 import * as React from "react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -25,7 +23,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Objects, States } from "@prisma/client";
 import { adminRoutes } from "@/routes";
 import Link from "next/link";
@@ -48,18 +55,22 @@ export function ObjectDataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  
+
   if (role === Role.ADMINISTRADOR && columns.length == 6) {
     columns.push({
       id: "actions",
       cell: ({ row }) => {
-        const object = row.original as Objects;        
+        const object = row.original as Objects;
         const states = (row.original as any).states as States;
-        const category = (row.original as any).category.name as string;         
+        const category = (row.original as any).category.name as string;
         return (
-         < DropdownMenuObjectsTable>
-          <UpdateObjectForm object={object} state={states} category={category} />
-         </DropdownMenuObjectsTable>     
+          <DropdownMenuObjectsTable object={object}>
+            <UpdateObjectForm
+              object={object}
+              state={states}
+              category={category}
+            />
+          </DropdownMenuObjectsTable>
         );
       },
     });
@@ -92,7 +103,7 @@ export function ObjectDataTable<TData, TValue>({
           className="max-w-sm"
         />
         <Link href={adminRoutes.create_objects}>
-         <Button> Crear Objecto</Button>
+          <Button> Crear Objecto</Button>
         </Link>
       </div>
       <div className="rounded-md border">
