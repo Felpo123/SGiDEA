@@ -54,13 +54,13 @@ export async function login(credentials: Credentials): Promise<User>{
 
 export async function signup(user: RegistrationData) {
   const { name, lastname, photo, roles_id, email, password } = user;
-
-  const emailAlreadyExists = await prisma.credentials.findFirst({
+  
+  const emailAlreadyExists = await prisma.credentials.findUnique({
     where: {
       email,
     },
   });
-
+  
   if (emailAlreadyExists) {
     throw new Error("Email already exists");
   }
