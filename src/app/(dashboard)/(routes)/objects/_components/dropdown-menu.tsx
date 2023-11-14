@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import {
   DropdownMenu,
@@ -22,27 +21,32 @@ import {
 } from "@/components/ui/dialog";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Objects } from "@prisma/client";
+import { Objects, Users } from "@prisma/client";
+import AssignmentObjectForm from "./assignment-object-form";
 
 interface DropdownMenuObjectsTableProps {
-  children: React.ReactNode;
+  children: {
+    updateform: React.ReactNode;
+    assignmentform: React.ReactNode;
+  };
   object: Objects;
 }
 
+const deleteObject = async (sku: string) => {
+  const response = await axios.put(`/api/objects/${sku}/delete`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+
 async function deleteConfirm(sku: string) {
   try {
-    toast.promise(
-      axios.delete(`/api/objects/${sku}/delete`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }),
-      {
-        loading: "Eliminando...",
-        success: <b>Objeto eliminado!</b>,
-        error: <b>Error al eliminar el objeto.</b>,
-      }
-    );
+    toast.promise(deleteObject(sku), {
+      loading: "Eliminando...",
+      success: <b>Objeto eliminado!</b>,
+      error: <b>Error al eliminar el objeto.</b>,
+    });
   } catch (error) {
     toast.error("Error al eliminar el objeto");
   }
@@ -77,7 +81,7 @@ function DropdownMenuObjectsTable({
                 Presione guardar para actualizar el objeto.
               </DialogDescription>
             </DialogHeader>
-            {children}
+            {children.updateform}
           </DialogContent>
         </Dialog>
         <Dialog>
@@ -120,17 +124,7 @@ function DropdownMenuObjectsTable({
                 Presione guardar para asignar el objeto.
               </DialogDescription>
             </DialogHeader>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button
-                  onClick={() => {
-                    console.log("Hola");
-                  }}
-                >
-                  Confirmar
-                </Button>
-              </DialogClose>
-            </DialogFooter>
+            {children.assignmentform}
           </DialogContent>
         </Dialog>
       </DropdownMenuContent>

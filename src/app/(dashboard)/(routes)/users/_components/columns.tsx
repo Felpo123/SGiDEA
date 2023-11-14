@@ -67,7 +67,7 @@ export const columns: ColumnDef<Users>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {user.flag && <DropdownMenuItem>Eliminar</DropdownMenuItem>}
+            {user.flag && <DropdownMenuItem>Bloquear</DropdownMenuItem>}
           </DropdownMenuContent>
         </DropdownMenu>
       );

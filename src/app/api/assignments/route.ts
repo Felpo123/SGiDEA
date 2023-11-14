@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { endAssignment } from "@/services/assignments.service";
 
 export async function GET(){
-    const objects = await prisma.assignments.findMany({ include: {users: true, objects: true}})
+    const objects = await prisma.assignments.findMany({ include: {users: true, objects: true}, orderBy: [ { flag: 'desc' }]})
     return NextResponse.json(objects);
 }
 

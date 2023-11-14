@@ -23,33 +23,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Objects, States } from "@prisma/client";
+import { Objects, States, Users } from "@prisma/client";
 import { adminRoutes } from "@/routes";
 import Link from "next/link";
 import { Role } from "@/types/role.d";
 import DropdownMenuObjectsTable from "./dropdown-menu";
 import UpdateObjectForm from "./update-form";
+import AssignmentObjectForm from "./assignment-object-form";
 
 interface ObjectDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   role: Role;
+  users: Users[] | [];
 }
 
 export function ObjectDataTable<TData, TValue>({
   columns,
   data,
   role,
+  users,
 }: ObjectDataTableProps<TData, TValue> & { role: Role }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -64,13 +57,21 @@ export function ObjectDataTable<TData, TValue>({
         const states = (row.original as any).states as States;
         const category = (row.original as any).category.name as string;
         return (
-          <DropdownMenuObjectsTable object={object}>
-            <UpdateObjectForm
-              object={object}
-              state={states}
-              category={category}
-            />
-          </DropdownMenuObjectsTable>
+          <DropdownMenuObjectsTable
+            object={object}
+            children={{
+              updateform: (
+                <UpdateObjectForm
+                  object={object}
+                  state={states}
+                  category={category}
+                />
+              ),
+              assignmentform: (
+                <AssignmentObjectForm object={object} usersData={users} />
+              ),
+            }}
+          />
         );
       },
     });

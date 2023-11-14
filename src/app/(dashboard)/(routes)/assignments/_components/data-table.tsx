@@ -1,10 +1,7 @@
-"use client"
-
-import * as React from "react"
- 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-
+"use client";
+import * as React from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -15,124 +12,81 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-
+} from "@tanstack/react-table";
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-  } from "@/components/ui/table"
-import { useSession } from "next-auth/react"
-
-import { MoreHorizontal } from "lucide-react"
-
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-  } from "@/components/ui/dropdown-menu"
-import { Assignments } from "@prisma/client"
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Role } from "@/types/role.d"
-import Link from "next/link"
-import { adminRoutes } from "@/routes"
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useSession } from "next-auth/react";
+import { Assignments } from "@prisma/client";
+import { Role } from "@/types/role.d";
+import Link from "next/link";
+import { adminRoutes } from "@/routes";
+import DropdownMenuAssignmentsTable from "./dropdown-menu";
 
 interface ObjectDataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[]
-    data: TData[]
-    role: Role
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  role: Role;
 }
 
 export function AssignmentDataTable<TData, TValue>({
-    columns,
-    data,
-    role
-  }: ObjectDataTableProps<TData, TValue>) {     
-    const { data: session } = useSession();
-    const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-        []
-      )      
-      
-      if (role === Role.ADMINISTRADOR && columns.length == 6) {
-        columns.push({
-        id: "actions",
-        cell: ({ row }) => {
-            const assigment = row.original as Assignments
-    
-            return (
-              <Dialog>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-8 w-8 p-0">
-                    <span className="sr-only">Abrir Menu</span>
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>Editar</DropdownMenuItem>
-                  <DialogTrigger asChild>
-                  <DropdownMenuItem>Eliminar</DropdownMenuItem>
-                  </DialogTrigger>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Estas seguro de eliminar la asignacion {assigment.id}?</DialogTitle>
-                  <DialogDescription>
-                      Esta acción no se puede deshacer. ¿Está seguro de que desea
-                      eliminar permanentemente este registro de nuestros servidores?
-                  </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                  <DialogClose asChild>
-                  <Button onClick={() => {console.log(assigment)}}>Confirmar</Button>
-                  </DialogClose>           
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-            )
-        },
-        })
-    }
+  columns,
+  data,
+  role,
+}: ObjectDataTableProps<TData, TValue>) {
+  const { data: session } = useSession();
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
 
-    const table = useReactTable({
-      data,
-      columns,
-      getCoreRowModel: getCoreRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
-      onSortingChange: setSorting,
-      getSortedRowModel: getSortedRowModel(),
-      onColumnFiltersChange: setColumnFilters,
-      getFilteredRowModel: getFilteredRowModel(),
-      state: {
-        sorting,
-        columnFilters,
+  if (role === Role.ADMINISTRADOR && columns.length == 6) {
+    columns.push({
+      id: "actions",
+      cell: ({ row }) => {
+        const assigment = row.original as Assignments;
+
+        return <DropdownMenuAssignmentsTable assigment={assigment} />;
       },
-    })
-   
-    return (
+    });
+  }
+
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      sorting,
+      columnFilters,
+    },
+  });
+
+  return (
     <div>
       <div className="flex items-center py-4 justify-between">
         <Input
-            placeholder="Filtrar objetos..."
-            value={(table.getColumn("description")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
+          placeholder="Filtrar asignaciones..."
+          value={
+            (table.getColumn("description")?.getFilterValue() as string) ?? ""
+          }
+          onChange={(event) =>
             table.getColumn("description")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
+          }
+          className="max-w-sm"
         />
-         <Link href={adminRoutes.create_assignments}>
-        <Button>Asignar objeto</Button>
-      </Link>
+        <Link href={adminRoutes.create_assignments}>
+          <Button>Asignar objeto</Button>
+        </Link>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -149,7 +103,7 @@ export function AssignmentDataTable<TData, TValue>({
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -163,14 +117,20 @@ export function AssignmentDataTable<TData, TValue>({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   No results.
                 </TableCell>
               </TableRow>
@@ -197,6 +157,5 @@ export function AssignmentDataTable<TData, TValue>({
         </Button>
       </div>
     </div>
-    )
-  }
-
+  );
+}
