@@ -84,9 +84,11 @@ export function AssignmentDataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-        <Link href={adminRoutes.create_assignments}>
-          <Button>Asignar objeto</Button>
-        </Link>
+        {role === Role.ADMINISTRADOR && (
+          <Link href={adminRoutes.create_assignments}>
+            <Button>Asignar objeto</Button>
+          </Link>
+        )}
       </div>
       <div className="rounded-md border">
         <Table>

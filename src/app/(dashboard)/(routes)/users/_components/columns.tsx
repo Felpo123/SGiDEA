@@ -12,22 +12,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import { Users } from "@prisma/client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import DropdownMenuUsersTable from "./dropdown-menu";
 
 export const columns: ColumnDef<Users>[] = [
-  {
-    accessorKey: "photo",
-    header: "Foto",
-    cell: ({ row }) => {
-      return (
-        <Avatar>
-          <AvatarImage src="/yo.jpeg" />
-          <AvatarFallback>AV</AvatarFallback>
-        </Avatar>
-      );
-    },
-  },
   {
     accessorKey: "name",
     header: "Nombres",
@@ -56,21 +44,7 @@ export const columns: ColumnDef<Users>[] = [
     id: "actions",
     cell: ({ row }) => {
       const user = row.original as Users;
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Abrir Menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {user.flag && <DropdownMenuItem>Bloquear</DropdownMenuItem>}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      return <DropdownMenuUsersTable user={user} />;
     },
   },
 ];

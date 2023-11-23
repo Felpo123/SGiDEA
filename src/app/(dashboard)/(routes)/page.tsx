@@ -1,14 +1,14 @@
-"use client";
+import { authOptions } from "@/lib/auth";
+import { Role } from "@/types/role.d";
+import { Session, getServerSession } from "next-auth";
+import AdminHomePage from "../_components/admin-home";
+import UserHomePage from "../_components/user-home";
 
-import { useSession } from "next-auth/react";
+async function Home() {
+  const session = (await getServerSession(authOptions)) as Session;
+  const { role } = session.user;
 
-function Home() {
-  const { data: session, status } = useSession();
-
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-between p-24">
-      session: {JSON.stringify(session?.user)}
-    </div>
-  );
+  return role === Role.ADMINISTRADOR ? <AdminHomePage /> : <UserHomePage />;
 }
+
 export default Home;

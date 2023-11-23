@@ -27,20 +27,39 @@ import {
 } from "@/components/ui/table";
 import Link from "next/link";
 import { adminRoutes } from "@/routes";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Users } from "@prisma/client";
 
 interface UsersDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];  
+  data: TData[];
 }
 
 export function UsersDataTable<TData, TValue>({
   columns,
-  data,  
+  data,
 }: UsersDataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+
+  if (columns.length === 4) {
+    columns.unshift({
+      accessorKey: "photo",
+      header: "Foto",
+      cell: ({ row }) => {
+        const user = row.original as Users;
+        const pathPhoto = `/../static/imgs/${user.photo}`;
+        return (
+          <Avatar>
+            <AvatarFallback>AV</AvatarFallback>
+            <AvatarImage src={pathPhoto} alt={user.name} />
+          </Avatar>
+        );
+      },
+    });
+  }
 
   const table = useReactTable({
     data,
@@ -59,7 +78,7 @@ export function UsersDataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4 justify-between    ">
+      <div className="flex items-center py-4 justify-between">
         <Input
           placeholder="Filtrar usuarios..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -68,9 +87,9 @@ export function UsersDataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-            <Link href={adminRoutes.create_users}>
-            <Button>Crear Usuario</Button>
-            </Link>
+        <Link href={adminRoutes.create_users}>
+          <Button className="max-w-sm">Crear Usuario</Button>
+        </Link>
       </div>
       <div className="rounded-md border">
         <Table>

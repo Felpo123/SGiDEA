@@ -103,9 +103,11 @@ export function ObjectDataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-        <Link href={adminRoutes.create_objects}>
-          <Button> Crear Objecto</Button>
-        </Link>
+        {role === Role.ADMINISTRADOR && (
+          <Link href={adminRoutes.create_objects}>
+            <Button> Crear Objecto</Button>
+          </Link>
+        )}
       </div>
       <div className="rounded-md border">
         <Table>

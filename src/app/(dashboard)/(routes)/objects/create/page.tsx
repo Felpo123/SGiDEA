@@ -55,6 +55,9 @@ const formSchema = z.object({
     .string()
     .min(1, { message: "Por favor ingresa el estado del objeto" }),
   category: z.string().min(1, { message: "Por favor ingresa la categoria" }),
+  specific_location: z
+    .string()
+    .min(1, { message: "Por favor ingresa la ubicacion" }),
 });
 
 function CreateObjectPage() {
@@ -66,6 +69,7 @@ function CreateObjectPage() {
       quantity: 0,
       state: "",
       category: "",
+      specific_location: "",
     },
   });
 
@@ -190,6 +194,24 @@ function CreateObjectPage() {
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona la categoria" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContentAndItem array={categories} />
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="specific_location"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Categoria del objeto</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona la ubicacion" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContentAndItem array={categories} />
