@@ -2,7 +2,7 @@ import React from "react";
 
 function UserHomePage() {
   return (
-    <div className="bg-white min-h-screen flex flex-col items-center justify-center">
+    <div className="bg-white flex flex-col items-center justify-center pt-32">
       <h1 className="text-4xl font-bold text-red-600 mb-4">
         Bienvenido al Sistema de Gestión de Inventario
       </h1>

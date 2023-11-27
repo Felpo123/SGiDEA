@@ -169,7 +169,7 @@ function CreateAssignmentForm({
                 <Select onValueChange={field.onChange} value={`${field.value}`}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecciona el Usuario" />
+                      <SelectValue placeholder=" " />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -194,7 +194,7 @@ function CreateAssignmentForm({
                 <Select onValueChange={field.onChange} value={`${field.value}`}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecciona el Objeto" />
+                      <SelectValue placeholder=" " />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>

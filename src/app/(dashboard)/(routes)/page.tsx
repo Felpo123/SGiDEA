@@ -8,7 +8,10 @@ async function Home() {
   const session = (await getServerSession(authOptions)) as Session;
   const { role } = session.user;
 
-  return role === Role.ADMINISTRADOR ? <AdminHomePage /> : <UserHomePage />;
+  return (
+    <div className="flex justify-center items-end">
+      {role === Role.ADMINISTRADOR ? <AdminHomePage /> : <UserHomePage />}
+    </div>
+  );
 }
-
 export default Home;

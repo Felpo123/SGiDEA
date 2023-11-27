@@ -54,7 +54,7 @@ export function UsersDataTable<TData, TValue>({
         return (
           <Avatar>
             <AvatarFallback>AV</AvatarFallback>
-            <AvatarImage src={pathPhoto} alt={user.name} />
+            <AvatarImage src="/static/imgs/descargar.jpg" alt={user.name} />
           </Avatar>
         );
       },

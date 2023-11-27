@@ -40,6 +40,7 @@ import { ConfirmModal } from "@/components/confirm-modal";
 import { states } from "@/constants/states";
 import { categories } from "@/constants/categories";
 import SelectContentAndItem from "@/components/select-content";
+import { specificLocation } from "@/constants/specific-location";
 
 const formSchema = z.object({
   sku: z.string(),
@@ -75,17 +76,11 @@ function CreateObjectPage() {
 
   const { isSubmitting, isValid } = form.formState;
 
-  const saveObject = async (
-    values: z.infer<typeof formSchema>,
-    general_location_id: number,
-    specific_location_id: number
-  ) => {
+  const saveObject = async (values: z.infer<typeof formSchema>) => {
     const response = await axios.post(
       "http://localhost:3000/api/objects",
       {
         values,
-        general_location_id,
-        specific_location_id,
       },
       {
         headers: {
@@ -99,12 +94,12 @@ function CreateObjectPage() {
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      toast.promise(saveObject(values, 1, 1), {
+      toast.promise(saveObject(values), {
         loading: "Guardando...",
         success: <b>Objeto guardado!</b>,
         error: <b>Error al ingresar el objeto.</b>,
       });
-      form.reset();
+      // form.reset();
     } catch (error) {
       toast.error("Error al ingresar el objeto");
     }
@@ -207,14 +202,14 @@ function CreateObjectPage() {
               name="specific_location"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Categoria del objeto</FormLabel>
+                  <FormLabel>Ubicacion Especifica</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona la ubicacion" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContentAndItem array={categories} />
+                    <SelectContentAndItem array={specificLocation} />
                   </Select>
                   <FormMessage />
                 </FormItem>
