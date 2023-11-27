@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "ts-node": "ts-node --compiler-option '{\"module\":\"CommonJS\"}'"
+    "lint": "next lint"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
@@ -52,5 +51,8 @@
     "prisma": "^5.4.2",
     "tailwindcss": "latest",
     "typescript": "latest"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   }
 }
