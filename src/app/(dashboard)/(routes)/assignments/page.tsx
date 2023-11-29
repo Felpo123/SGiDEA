@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { adminRoutes } from "@/routes";
+import { adminRoutes, api_routes } from "@/routes";
 import { columns } from "./_components/columns";
 import axios from "axios";
 import Link from "next/link";
@@ -12,9 +12,9 @@ async function getData(role: Role, id: number): Promise<Object[]> {
   try {
     let url = "";
     if (role == Role.ADMINISTRADOR) {
-      url = "http://localhost:3000/api/assignments";
+      url = api_routes.assignments;
     } else {
-      url = "http://localhost:3000/api/assignments/" + id;
+      url = `${api_routes.assignments}/` + id;
     }
     const response = await axios.get(url, {
       headers: {

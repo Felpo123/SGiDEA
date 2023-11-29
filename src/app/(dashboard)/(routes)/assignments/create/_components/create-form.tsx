@@ -22,7 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { appRoutes } from "@/routes";
+import { api_routes, appRoutes } from "@/routes";
 import React from "react";
 import toast from "react-hot-toast";
 import { CalendarIcon } from "lucide-react";
@@ -36,6 +36,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Objects, Users } from "@prisma/client";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
+import { ConfirmModal } from "@/components/confirm-modal";
 
 interface CreateAssignmentFormProps {
   usersData: Users[] | [];
@@ -71,15 +72,11 @@ function CreateAssignmentForm({
   const { isSubmitting, isValid } = form.formState;
 
   const saveAssignment = async (assignment: z.infer<typeof formSchema>) => {
-    const response = await axios.post(
-      "http://localhost:3000/api/assignments",
-      assignment,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await axios.post(api_routes.assignments, assignment, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     return response.data;
   };
 
@@ -234,9 +231,9 @@ function CreateAssignmentForm({
                 Cancelar
               </Button>
             </Link>
-            <Button type="submit" disabled={!isValid || isSubmitting}>
-              Asignar
-            </Button>
+            <ConfirmModal onConfirm={form.handleSubmit(handleSubmit)}>
+              <Button disabled={!isValid || isSubmitting}>Asignar</Button>
+            </ConfirmModal>
           </div>
         </form>
       </Form>

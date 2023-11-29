@@ -22,13 +22,14 @@ import { MoreHorizontal } from "lucide-react";
 import { Assignments } from "@prisma/client";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { api_routes } from "@/routes";
 
 interface DropdownMenuAssignmentsTableProps {
   assigment: Assignments;
 }
 
 const deleteAssignment = async (id: number) => {
-  const response = await axios.put(`/api/assignments/${id}/delete`, {
+  const response = await axios.put(`${api_routes.assignments}/${id}/delete`, {
     headers: {
       "Content-Type": "application/json",
     },

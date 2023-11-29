@@ -30,6 +30,7 @@ import { Role } from "@/types/role.d";
 import DropdownMenuObjectsTable from "./dropdown-menu";
 import UpdateObjectForm from "./update-form";
 import AssignmentObjectForm from "./assignment-object-form";
+import { FullObjectData } from "./full_object_type";
 
 interface ObjectDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -49,11 +50,11 @@ export function ObjectDataTable<TData, TValue>({
     []
   );
 
-  if (role === Role.ADMINISTRADOR && columns.length == 6) {
+  if (role === Role.ADMINISTRADOR && columns.length == 5) {
     columns.push({
       id: "actions",
       cell: ({ row }) => {
-        const object = row.original as Objects;
+        const object = row.original as FullObjectData;
         const states = (row.original as any).states as States;
         const category = (row.original as any).category.name as string;
         return (

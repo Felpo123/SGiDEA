@@ -17,32 +17,32 @@ import React from "react";
 interface ConfirmModalProps {
   children: React.ReactNode;
   onConfirm?: () => any;
-};
+}
 
-export const ConfirmModal = ({
-    children,
-    onConfirm
-}: ConfirmModalProps) => {
-    const [open, setOpen] = React.useState(false);
-    
+export const ConfirmModal = ({ children, onConfirm }: ConfirmModalProps) => {
+  const [open, setOpen] = React.useState(false);
+
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger asChild>
-        {children}
-      </AlertDialogTrigger>
+      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogTitle>
+            ¿Estas seguro de crear el registro?
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone.
+            Esta acción no se puede deshacer. ¿Está seguro de que desea ingresar
+            este registro al sistema?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() =>{
-            wait().then(() => setOpen(false));
-            if(onConfirm)onConfirm();
-          }}>
+          <AlertDialogAction
+            onClick={() => {
+              wait().then(() => setOpen(false));
+              if (onConfirm) onConfirm();
+            }}
+          >
             Continue
           </AlertDialogAction>
         </AlertDialogFooter>

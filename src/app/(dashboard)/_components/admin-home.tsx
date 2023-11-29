@@ -12,6 +12,7 @@ import axios from "axios";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import format from "date-fns/format";
 import { User } from "next-auth";
+import { api_routes } from "@/routes";
 
 interface UserAndEmail extends Users {
   credentials: {
@@ -39,14 +40,11 @@ interface DashboardData {
 }
 
 const dashboardData = async (): Promise<DashboardData> => {
-  const response = await axios.get(
-    "http://localhost:3000/api/assignments/dashboard",
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const response = await axios.get(api_routes.assignments_dashboard, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
   return response.data;
 };
 
@@ -131,7 +129,10 @@ async function AdminHomePage() {
                 {expiredAssignments.map((assignment) => (
                   <div key={assignment.id} className="flex items-center">
                     <Avatar className="h-9 w-9">
-                      <AvatarImage src={assignment.users.photo} alt="Avatar" />
+                      <AvatarImage
+                        src={`/static/imgs/${assignment.users.photo}`}
+                        alt="Avatar"
+                      />
                       <AvatarFallback>AV</AvatarFallback>
                     </Avatar>
                     <div className="ml-4 space-y-1">

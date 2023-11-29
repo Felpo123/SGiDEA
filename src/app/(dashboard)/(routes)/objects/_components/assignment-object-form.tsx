@@ -40,6 +40,7 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
+import { api_routes } from "@/routes";
 
 const formSchema = z.object({
   initial_date: z.date(),
@@ -71,15 +72,11 @@ function AssignmentObjectForm({ object, usersData }: UpdateObjectFormProps) {
   const { isSubmitting, isValid } = form.formState;
 
   const saveAssignment = async (assignment: z.infer<typeof formSchema>) => {
-    const response = await axios.post(
-      "http://localhost:3000/api/assignments",
-      assignment,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await axios.post(api_routes.assignments, assignment, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     return response.data;
   };
 

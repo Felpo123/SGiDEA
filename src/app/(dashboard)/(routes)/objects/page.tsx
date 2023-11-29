@@ -4,11 +4,20 @@ import { Object } from "@/types/object";
 import axios from "axios";
 import { Session, getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { Users } from "@prisma/client";
+import { Objects, SpecificLocations, States, Users } from "@prisma/client";
+import { api_routes } from "@/routes";
 
-async function getObjects(): Promise<Object[]> {
+interface FullObjectData extends Objects {
+  category: {
+    name: string;
+  };
+  state: States;
+  specific_location: SpecificLocations;
+}
+
+async function getObjects(): Promise<FullObjectData[]> {
   try {
-    const response = await axios.get("http://localhost:3000/api/objects", {
+    const response = await axios.get(api_routes.objects, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -21,7 +30,7 @@ async function getObjects(): Promise<Object[]> {
 
 async function getUsers(): Promise<Users[]> {
   try {
-    const response = await axios.get("http://localhost:3000/api/users", {
+    const response = await axios.get(api_routes.users, {
       headers: {
         "Content-Type": "application/json",
       },

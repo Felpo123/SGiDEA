@@ -1,10 +1,11 @@
 import { Objects, Users } from "@prisma/client";
 import CreateAssignmentForm from "./_components/create-form";
 import axios from "axios";
+import { api_routes } from "@/routes";
 
 const getUsers = async () => {
   try {
-    const response = await axios.get("http://localhost:3000/api/users", {
+    const response = await axios.get(api_routes.users, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -17,7 +18,7 @@ const getUsers = async () => {
 
 const getObjects = async () => {
   try {
-    const response = await axios.get("http://localhost:3000/api/objects", {
+    const response = await axios.get(api_routes.objects, {
       headers: {
         "Content-Type": "application/json",
       },

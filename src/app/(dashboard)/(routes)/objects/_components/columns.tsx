@@ -8,10 +8,6 @@ import CellModal from "./cell-modal";
 
 export const columns: ColumnDef<Object>[] = [
   {
-    accessorKey: "sku",
-    header: "Sku",
-  },
-  {
     accessorKey: "name",
     header: ({ column }) => {
       return (
@@ -43,7 +39,7 @@ export const columns: ColumnDef<Object>[] = [
     },
     cell: ({ row }) => {
       return (
-        <div className="flex items-center justify-center">
+        <div className="flex justify-center items-center pr-20">
           {row.original.quantity}
         </div>
       );

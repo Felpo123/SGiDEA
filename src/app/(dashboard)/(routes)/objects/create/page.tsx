@@ -21,7 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { appRoutes } from "@/routes";
+import { api_routes, appRoutes } from "@/routes";
 import React from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -78,7 +78,7 @@ function CreateObjectPage() {
 
   const saveObject = async (values: z.infer<typeof formSchema>) => {
     const response = await axios.post(
-      "http://localhost:3000/api/objects",
+      api_routes.objects,
       {
         values,
       },

@@ -23,6 +23,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { Objects, Users } from "@prisma/client";
 import AssignmentObjectForm from "./assignment-object-form";
+import { api_routes } from "@/routes";
 
 interface DropdownMenuObjectsTableProps {
   children: {
@@ -33,7 +34,7 @@ interface DropdownMenuObjectsTableProps {
 }
 
 const deleteObject = async (sku: string) => {
-  const response = await axios.put(`/api/objects/${sku}/delete`, {
+  const response = await axios.put(`${api_routes.objects}/${sku}/delete`, {
     headers: {
       "Content-Type": "application/json",
     },

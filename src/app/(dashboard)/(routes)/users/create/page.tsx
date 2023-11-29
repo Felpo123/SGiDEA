@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { appRoutes } from "@/routes";
+import { adminRoutes, api_routes, appRoutes } from "@/routes";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { ConfirmModal } from "@/components/confirm-modal";
@@ -32,7 +32,7 @@ const formSchema = z
       .max(255, { message: "Por favor ingresa el apellido de usuario" }),
     photo: z
       .string()
-      .min(1)
+      .min(0)
       .max(255, { message: "Por favor ingresa la foto de usuario" }),
     roles_id: z
       .number()
@@ -41,11 +41,11 @@ const formSchema = z
     email: z.string().email({ message: "Por favor ingresa un email valido" }),
     password: z
       .string()
-      .min(1)
+      .min(7)
       .max(255, { message: "Por favor ingresa una contraseña" }),
     confirm_password: z
       .string()
-      .min(1)
+      .min(7)
       .max(255, { message: "Por favor reescribe la contraseña" }),
   })
   .refine((data) => data.password === data.confirm_password, {
@@ -54,6 +54,8 @@ const formSchema = z
   });
 
 function CreateUserPage() {
+  const [file, setFile] = useState<File | null>(null);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -69,34 +71,36 @@ function CreateUserPage() {
 
   const { isSubmitting, isValid } = form.formState;
 
-  const saveUser = async (values: z.infer<typeof formSchema>) => {
-    const response = await axios.post(
-      "http://localhost:3000/api/auth/signup",
-      {
-        name: values.name,
-        lastname: values.lastname,
-        photo: values.photo.split(`\\`)[2],
-        roles_id: values.roles_id,
-        email: values.email,
-        password: values.password,
+  const saveUser = async (values: FormData) => {
+    console.log(values, file);
+    const response = await axios.post(api_routes.auth_signup, values, {
+      headers: {
+        "Content-Type": "multipart/form-data",
       },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    });
     return response;
   };
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    const formData = new FormData();
+    formData.append("name", values.name);
+    formData.append("lastname", values.lastname);
+    formData.append("email", values.email);
+    formData.append("password", values.password);
+    formData.append("roles_id", values.roles_id.toString());
+    if (file) {
+      formData.append("photo", file);
+    } else {
+      formData.append("photo", "df-user.webp");
+    }
+
     try {
-      toast.promise(saveUser(values), {
+      toast.promise(saveUser(formData), {
         loading: "Guardando...",
         success: <b>Usuario creado!</b>,
         error: (err) => `${err.response.data.message}`,
       });
-      //form.reset();
+      form.reset();
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
@@ -112,6 +116,7 @@ function CreateUserPage() {
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-4 mt-2"
+            encType="multipart/form-data"
           >
             <FormField
               control={form.control}
@@ -160,6 +165,12 @@ function CreateUserPage() {
                       placeholder="usuario.jpg"
                       accept=".jpg, .jpeg, .png"
                       {...field}
+                      onChange={(event) => {
+                        if (event.target.files) {
+                          setFile(event.target.files[0]);
+                        }
+                        field.onChange(event);
+                      }}
                     />
                   </FormControl>
                   <FormDescription>
@@ -203,6 +214,7 @@ function CreateUserPage() {
                       {...field}
                     />
                   </FormControl>
+                  <FormDescription>Minimo 7 caracteres.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -229,7 +241,7 @@ function CreateUserPage() {
             />
 
             <div className="flex items-center gap-x-2">
-              <Link href={appRoutes.inventory}>
+              <Link href={appRoutes.users}>
                 <Button type="button" variant="outline">
                   Cancelar
                 </Button>

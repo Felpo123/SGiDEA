@@ -22,13 +22,14 @@ import { MoreHorizontal } from "lucide-react";
 import { Users } from "@prisma/client";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { api_routes } from "@/routes";
 
 interface DropdownMenuUsersTableProps {
   user: Users;
 }
 
 const deleteUser = async (id: number) => {
-  const response = await axios.put(`/api/users/${id}/delete`, {
+  const response = await axios.put(`${api_routes.users}/${id}/delete`, {
     headers: {
       "Content-Type": "application/json",
     },

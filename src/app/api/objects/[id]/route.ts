@@ -1,3 +1,4 @@
+import { specificLocation } from './../../../../constants/specific-location';
 import { categories } from '@/constants/categories';
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
@@ -31,32 +32,20 @@ export async function GET(request:Request,{params}:Params){
 
 export async function PUT(request:Request,{params}:Params){
     try{
-        const {sku, name, quantity, flag , state, category, specific_location_id} = await request.json();
+        const {name, quantity, state, category, specific_location} = await request.json();
+
+        const state_record = await prisma.states.findUnique({where: {name: state}})
+        const category_record = await prisma.categories.findUnique({where: {name: category}})
+        const specific_location_record = await prisma.specificLocations.findFirst({where: {name: specific_location}})
+        
         const updatedObject = await prisma.objects.update({
             where: {sku: params.id},
             data: {
                 name,
-                quantity,
-                flag,
-                states: {
-                    update: {
-                        where: {name: state},
-                        data: {name: state}
-                    }
-                },
-                category: { 
-                    update: {
-                        where: {name: category},
-                        data: {name: category}
-                    }
-                
-                },
-                specific_location: {
-                    update: {
-                        where: {id: specific_location_id},
-                        data: {id: specific_location_id}
-                    }
-                }
+                quantity,             
+                states_id: state_record?.id,
+                categories_id: category_record?.id,
+                specific_location_id: specific_location_record?.id
             }
         })
         return NextResponse.json(updatedObject)

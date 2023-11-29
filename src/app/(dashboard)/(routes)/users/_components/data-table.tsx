@@ -29,6 +29,7 @@ import Link from "next/link";
 import { adminRoutes } from "@/routes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Users } from "@prisma/client";
+import path from "path";
 
 interface UsersDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -50,11 +51,16 @@ export function UsersDataTable<TData, TValue>({
       header: "Foto",
       cell: ({ row }) => {
         const user = row.original as Users;
-        const pathPhoto = `/../static/imgs/${user.photo}`;
+        const pathImage = path.join(
+          process.cwd(),
+          "static",
+          "imgs",
+          user.photo
+        );
         return (
           <Avatar>
             <AvatarFallback>AV</AvatarFallback>
-            <AvatarImage src="/static/imgs/descargar.jpg" alt={user.name} />
+            <AvatarImage src={pathImage} alt={user.name} />
           </Avatar>
         );
       },

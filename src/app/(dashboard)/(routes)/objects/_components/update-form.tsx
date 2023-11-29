@@ -18,11 +18,14 @@ import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
 import SelectContentAndItem from "@/components/select-content";
 import { states } from "@/constants/states";
 import { categories } from "@/constants/categories";
-import { Categories, Objects, States } from "@prisma/client";
+import { Categories, Objects, SpecificLocations, States } from "@prisma/client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import axios from "axios";
+import { api_routes } from "@/routes";
+import { specificLocation } from "@/constants/specific-location";
+import { FullObjectData } from "./full_object_type";
 
 const formSchema = z.object({
   sku: z.string(),
@@ -38,10 +41,13 @@ const formSchema = z.object({
     .string()
     .min(1, { message: "Por favor ingresa el estado del objeto" }),
   category: z.string().min(1, { message: "Por favor ingresa la categoria" }),
+  specific_location: z
+    .string()
+    .min(1, { message: "Por favor ingresa la ubicacion" }),
 });
 
 interface UpdateObjectFormProps {
-  object: Objects;
+  object: FullObjectData;
   state: States;
   category: string;
 }
@@ -55,23 +61,18 @@ function UpdateObjectForm({ object, state, category }: UpdateObjectFormProps) {
       quantity: object.quantity,
       state: state.name,
       category: category,
+      specific_location: object.specific_location.name,
     },
   });
 
   const { isSubmitting, isValid } = form.formState;
 
-  const updateObject = async (
-    values: z.infer<typeof formSchema>,
-    general_location_id: number,
-    specific_location_id: number
-  ) => {
+  const updateObject = async (values: z.infer<typeof formSchema>) => {
     try {
       const { data } = await axios.put(
-        `/api/objects/${object.sku}`,
+        `${api_routes.objects}/${object.sku}`,
         {
           ...values,
-          general_location_id,
-          specific_location_id,
         },
         {
           headers: {
@@ -86,7 +87,7 @@ function UpdateObjectForm({ object, state, category }: UpdateObjectFormProps) {
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      toast.promise(updateObject(values, 1, 1), {
+      toast.promise(updateObject(values), {
         loading: "Actualizando...",
         success: <b>Objeto actualizado!</b>,
         error: <b>Error al actualizar el objeto.</b>,
@@ -174,6 +175,25 @@ function UpdateObjectForm({ object, state, category }: UpdateObjectFormProps) {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="specific_location"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Ubicacion Especifica</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona la ubicacion" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContentAndItem array={specificLocation} />
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <div className="flex items-center gap-x-2">
               <DialogFooter>
                 <DialogClose asChild>
