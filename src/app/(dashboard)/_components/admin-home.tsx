@@ -39,14 +39,24 @@ interface DashboardData {
   expiredAssignments: ExpiredAssignments[];
 }
 
-const dashboardData = async (): Promise<DashboardData> => {
-  const response = await axios.get(api_routes.assignments_dashboard, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  return response.data;
-};
+async function dashboardData(): Promise<DashboardData> {
+  try {
+    const response = await axios.get(api_routes.assignments_dashboard, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return {
+      countObjects: 0,
+      countAssignments: 0,
+      recentObjects: [],
+      expiredAssignments: [],
+    };
+  }
+}
 
 async function AdminHomePage() {
   const { countObjects, countAssignments, recentObjects, expiredAssignments } =

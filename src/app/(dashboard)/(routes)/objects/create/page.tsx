@@ -99,7 +99,7 @@ function CreateObjectPage() {
         success: <b>Objeto guardado!</b>,
         error: <b>Error al ingresar el objeto.</b>,
       });
-      // form.reset();
+      form.reset();
     } catch (error) {
       toast.error("Error al ingresar el objeto");
     }

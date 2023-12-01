@@ -106,7 +106,7 @@ export function ObjectDataTable<TData, TValue>({
         />
         {role === Role.ADMINISTRADOR && (
           <Link href={adminRoutes.create_objects}>
-            <Button> Crear Objecto</Button>
+            <Button> Crear Objeto</Button>
           </Link>
         )}
       </div>

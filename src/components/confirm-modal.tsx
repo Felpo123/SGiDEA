@@ -36,14 +36,14 @@ export const ConfirmModal = ({ children, onConfirm }: ConfirmModalProps) => {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
               wait().then(() => setOpen(false));
               if (onConfirm) onConfirm();
             }}
           >
-            Continue
+            Continuar
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
