@@ -7,6 +7,8 @@ import { columns } from "./_components/columns";
 import axios from "axios";
 import { Users } from "@prisma/client";
 
+export const revalidate = 0;
+
 async function getData(): Promise<Users[]> {
   try {
     const response = await axios.get(api_routes.users, {

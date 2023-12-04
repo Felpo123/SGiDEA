@@ -3,6 +3,8 @@ import CreateAssignmentForm from "./_components/create-form";
 import axios from "axios";
 import { api_routes } from "@/routes";
 
+export const revalidate = 0;
+
 const getUsers = async () => {
   try {
     const response = await axios.get(api_routes.users, {
