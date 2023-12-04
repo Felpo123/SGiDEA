@@ -172,7 +172,7 @@ function CreateAssignmentForm({
                   <SelectContent>
                     {usersData.map((user) => (
                       <SelectItem key={user.id} value={user.id + ""}>
-                        {user.name}
+                        {user.name + " " + user.lastname}
                       </SelectItem>
                     ))}
                   </SelectContent>
