@@ -37,8 +37,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(registerUser);
   } catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
+    if (error instanceof Error) {      
       return NextResponse.json(
         {
           message: error.message,

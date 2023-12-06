@@ -51,8 +51,7 @@ export async function PUT(request:Request,{params}:Params){
         return NextResponse.json(updatedObject)
 
     }catch(e){
-        if(e instanceof Error){
-            console.log(e.message)
+        if(e instanceof Error){            
             return NextResponse.json(
                 {
                     message: e.message,

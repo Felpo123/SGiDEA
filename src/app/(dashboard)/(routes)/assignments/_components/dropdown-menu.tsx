@@ -34,7 +34,6 @@ const deleteAssignment = async (id: number) => {
       "Content-Type": "application/json",
     },
   });
-  console.log(response);
 };
 
 async function deleteConfirm(id: number) {
@@ -64,7 +63,6 @@ function DropdownMenuAssignmentsTable({
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Acciones</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Editar</DropdownMenuItem>
           <DialogTrigger asChild>
             <DropdownMenuItem>Eliminar</DropdownMenuItem>
           </DialogTrigger>

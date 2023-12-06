@@ -48,7 +48,6 @@ async function dashboardData(): Promise<DashboardData> {
     });
     return response.data;
   } catch (error) {
-    console.error(error);
     return {
       countObjects: 0,
       countAssignments: 0,

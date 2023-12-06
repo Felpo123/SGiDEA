@@ -11,12 +11,10 @@ export async function PUT(request: Request, { params }: Params) {
     const user = await prisma.users.update({
       where: { id: Number(id) },
       data: { flag: false },
-    });
-    console.log(user);
+    });    
     return NextResponse.json(user);
   } catch (e) {
-    if (e instanceof Error) {
-      console.log(e.message);
+    if (e instanceof Error) {      
       return NextResponse.json(
         {
           message: e.message,

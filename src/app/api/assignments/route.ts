@@ -21,8 +21,7 @@ export async function POST(request:Request){
                 object_sku
             }
         })
-        const object = await prisma.objects.update({where: {sku: object_sku}, data: {quantity: {decrement:1}}})
-        console.log(newAssignment.end_date)
+        const object = await prisma.objects.update({where: {sku: object_sku}, data: {quantity: {decrement:1}}})       
         endAssignment(newAssignment.end_date, newAssignment.id, object_sku)   
         return NextResponse.json(newAssignment);
         }

@@ -2,8 +2,7 @@ import { prisma } from "@/lib/prisma";
 import schedule from "node-schedule";
 
 export async function endAssignment(date:Date, id:number, sku:string){
-    const assignment = await prisma.assignments.findUnique({where: {id:id,end_date: date, flag: true}})
-    console.log(assignment)
+    const assignment = await prisma.assignments.findUnique({where: {id:id,end_date: date, flag: true}})   
     
     if(assignment){
         const job = schedule.scheduleJob(date, async function(){

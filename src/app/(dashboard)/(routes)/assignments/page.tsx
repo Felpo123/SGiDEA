@@ -7,8 +7,9 @@ import { AssignmentDataTable } from "./_components/data-table";
 import { Session, getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { Role } from "@/types/role.d";
+import { Assignments } from "@prisma/client";
 
-async function getData(role: Role, id: number): Promise<Object[]> {
+async function getData(role: Role, id: number): Promise<Assignments[]> {
   try {
     let url = "";
     if (role == Role.ADMINISTRADOR) {

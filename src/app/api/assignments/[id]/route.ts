@@ -7,7 +7,7 @@ interface Params {
 
 export async function GET(request:Request,{params}:Params){
     try{
-       const assignment = await prisma.assignments.findMany({where: {user_id: parseInt(params.id), flag: true},  include: {users: true, objects: true}})
+       const assignment = await prisma.assignments.findMany({where: {user_id: parseInt(params.id)},  include: {users: true, objects: true}, orderBy: {flag: 'desc'}})
         return NextResponse.json(assignment);
     }catch(e){
         if(e instanceof Error){

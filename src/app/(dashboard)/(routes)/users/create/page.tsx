@@ -72,7 +72,6 @@ function CreateUserPage() {
   const { isSubmitting, isValid } = form.formState;
 
   const saveUser = async (values: FormData) => {
-    console.log(values, file);
     const response = await axios.post(api_routes.auth_signup, values, {
       headers: {
         "Content-Type": "multipart/form-data",
